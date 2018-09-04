@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "plugins": ["prettier", "react"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-var": "error",
+    "no-console": "warn",
+    "no-undef": "error",
+    "no-shadow": "warn",
+    "camelcase": "error",
+    "prefer-const": "error"
+  },
+  "env": {
+    "browser": true,
+    "jest": true,
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "Promise": true
+  }
+}
