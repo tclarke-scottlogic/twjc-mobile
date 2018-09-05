@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, SectionList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SectionList,
+  ActivityIndicator
+} from "react-native";
 import { database } from "../api/database";
 import { ListItem } from "./ListItem";
 
@@ -8,8 +14,8 @@ const SectionPrefix = "__section__";
 const makeSection = sectionList => {
   return sectionList.map((d, index) => {
     const items = Object.keys(d.items).map(key => {
+      console.info(d.items[key]);
       return {
-        id: key,
         ...d.items[key]
       };
     });
@@ -28,7 +34,7 @@ export class ItemList extends Component {
     this.state = {
       sectionList: []
     };
-    database.get().then(list =>
+    database.listen(list => {
       this.setState({
         sectionList: [
           {
@@ -36,14 +42,14 @@ export class ItemList extends Component {
             items: list || []
           }
         ]
-      })
-    );
+      });
+    });
   }
 
   render() {
     const { sectionList } = this.state;
 
-    return (
+    return sectionList && sectionList.length > 0 ? (
       <SectionList
         style={styles.list}
         ref={c => (this.sectionList = c)}
@@ -61,6 +67,8 @@ export class ItemList extends Component {
         stickySectionHeadersEnabled={false}
         waitForInteractions={true}
       />
+    ) : (
+      <ActivityIndicator />
     );
   }
 }
