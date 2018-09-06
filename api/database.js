@@ -2,6 +2,13 @@ import { firebaseApp } from "./firebaseApp";
 
 const initDatabase = () => {
   let list = [];
+  let handle = null;
+
+  const launch = callback => () => {
+    callback(list);
+    handle = null;
+  };
+
   return {
     get: () => {
       return firebaseApp
@@ -16,12 +23,13 @@ const initDatabase = () => {
         .database()
         .ref("notifications")
         .orderByKey()
-        .limitToFirst(100)
+        .limitToLast(2000)
         .on("child_added", snapshot => {
           const data = snapshot.val();
-          console.info(snapshot.key, data);
           list = [{ id: snapshot.key, ...data }, ...list];
-          callback(list);
+          if (!handle) {
+            handle = setTimeout(launch(callback), 500);
+          }
         });
     }
   };

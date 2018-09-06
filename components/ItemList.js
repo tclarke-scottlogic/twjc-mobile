@@ -14,7 +14,6 @@ const SectionPrefix = "__section__";
 const makeSection = sectionList => {
   return sectionList.map((d, index) => {
     const items = Object.keys(d.items).map(key => {
-      console.info(d.items[key]);
       return {
         ...d.items[key]
       };
@@ -32,22 +31,25 @@ export class ItemList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sectionList: []
+      list: []
     };
     database.listen(list => {
       this.setState({
-        sectionList: [
-          {
-            title: "My List",
-            items: list || []
-          }
-        ]
+        list
       });
     });
   }
 
   render() {
-    const { sectionList } = this.state;
+    const { list } = this.state;
+    const sectionList = [
+      {
+        title: "My List",
+        items: list || []
+      }
+    ];
+
+    console.info("Rendering", list.length);
 
     return sectionList && sectionList.length > 0 ? (
       <SectionList
@@ -55,7 +57,7 @@ export class ItemList extends Component {
         ref={c => (this.sectionList = c)}
         sections={makeSection(sectionList)}
         keyExtractor={(item, key) => {
-          return key;
+          return item.id;
         }}
         renderItem={({ item }) => {
           return <ListItem item={item} />;
