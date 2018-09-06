@@ -31,7 +31,8 @@ const initDatabase = () => {
             handle = setTimeout(launch(callback), 500);
           }
         });
-    }
+    },
+    disconnect: () => {}
   };
 };
 

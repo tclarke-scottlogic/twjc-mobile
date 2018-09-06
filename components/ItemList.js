@@ -1,13 +1,22 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SectionList,
-  ActivityIndicator
-} from "react-native";
-import { database } from "../api/database";
+import { connect } from "react-redux";
+
+import { Text, SectionList, ActivityIndicator } from "react-native";
 import { ListItem } from "./ListItem";
+
+import { Actions } from "../store/reducers";
+import { logger as loggerBase } from "../services/logger";
+
+const logger = loggerBase.forContext("ItemList");
+
+const mapStateToProps = state => ({
+  app: state.app
+});
+
+const mapDispatchToProps = dispatch => ({
+  start: () => dispatch(Actions.App.start()),
+  end: () => dispatch(Actions.App.end())
+});
 
 const SectionPrefix = "__section__";
 
@@ -27,29 +36,30 @@ const makeSection = sectionList => {
   });
 };
 
-export class ItemList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: []
-    };
-    database.listen(list => {
-      this.setState({
-        list
-      });
-    });
+class ItemListBase extends Component {
+  componentWillMount() {
+    this.props.start();
+  }
+
+  componentWillUnmount() {
+    this.props.end();
   }
 
   render() {
-    const { list } = this.state;
+    const { app } = this.props;
+
+    logger.dev(this.props);
+
+    if (!app.list) return <Text>???</Text>;
+
+    logger.dev("Rendering", app.list.length);
+
     const sectionList = [
       {
         title: "My List",
-        items: list || []
+        items: app.list || []
       }
     ];
-
-    console.info("Rendering", list.length);
 
     return sectionList && sectionList.length > 0 ? (
       <SectionList
@@ -74,6 +84,10 @@ export class ItemList extends Component {
     );
   }
 }
+
+export const ItemList = connect(mapStateToProps, mapDispatchToProps)(
+  ItemListBase
+);
 
 const styles = {
   list: {
