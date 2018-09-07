@@ -48,18 +48,16 @@ class ItemListBase extends Component {
   render() {
     const { app } = this.props;
 
-    logger.dev(this.props);
+    const { sectionList } = app;
 
-    if (!app.list) return <Text>???</Text>;
+    logger.dev(
+      "Rendering",
+      sectionList.length && sectionList[0].items
+        ? sectionList[0].items.length
+        : app
+    );
 
-    logger.dev("Rendering", app.list.length);
-
-    const sectionList = [
-      {
-        title: "My List",
-        items: app.list || []
-      }
-    ];
+    if (!sectionList) return <Text>???</Text>;
 
     return sectionList && sectionList.length > 0 ? (
       <SectionList

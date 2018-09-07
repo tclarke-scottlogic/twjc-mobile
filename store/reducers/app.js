@@ -1,5 +1,9 @@
+import { logger as loggerBase } from "../../services/logger";
+
+const logger = loggerBase.forContext(loggerBase.middlewareContext);
+
 const DEFAULT_STATE = {
-  list: []
+  sectionList: []
 };
 
 export const AppActionTypes = {
@@ -24,7 +28,17 @@ export const appActions = {
 export const app = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case AppActionTypes.NEW_LIST:
-      return { ...state, list: action.list };
+      const { list } = action;
+      logger.info("New List", list.length);
+
+      const sectionList = [
+        {
+          title: "My List",
+          items: list || []
+        }
+      ];
+
+      return { ...state, sectionList };
   }
   return state;
 };
