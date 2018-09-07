@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import { Text, SectionList, ActivityIndicator } from "react-native";
 import { ListItem } from "./ListItem";
 
-import { Actions } from "../store/reducers";
-import { logger as loggerBase } from "../services/logger";
+import { Actions } from "../../store/reducers";
+import { logger as loggerBase } from "../../services/logger";
 
 const logger = loggerBase.forContext("ItemList");
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { StyleSheet, View } from "react-native";
-import { ItemList } from "./components/ItemList";
+import { ItemList } from "./components";
 import { configureStore } from "./store/configureStore";
 
 const { store } = configureStore();
